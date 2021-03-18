@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { createAccountInput, createAccountOutput } from "./dtos/create-account.dto";
+import { createAccountInput } from "./dtos/create-account.dto";
+import { LoginInput } from "./dtos/login.dto";
 import { User } from "./entities/user.entity";
 
 @Injectable()
@@ -10,16 +11,44 @@ export class UsersService {
         @InjectRepository(User) private readonly users: Repository<User>
     ) { }
 
-    async createAccout({ email, password, role }: createAccountInput): Promise<[boolean, string?]> {
+    async createAccout({ email, password, role }: createAccountInput): Promise<{ ok: boolean; error?: string }> {
         try {
-            const exists = await this.users.findOne({ email })
+            const exists = await this.users.findOne({ email });
             if (exists) {
-                return [false, 'email exist'];
+                return { ok: false, error: 'There is a user with that email already' };
             }
             await this.users.save(this.users.create({ email, password, role }));
-            return [true];
+            return { ok: true };
         } catch (e) {
-            return [false, "couldn't creat"];
+            return { ok: false, error: "Couldn't create account" };
+        }
+    }
+
+    async login({ email, password }: LoginInput): Promise<{ ok: boolean; error?: string; token?: string }> {
+        try {
+            const user = await this.users.findOne({ email });
+            if (!user) {
+                return {
+                    ok: false,
+                    error: "User not found"
+                }
+            }
+            const passwordCorrect = await user.checkPassword(password);
+            if (!passwordCorrect) {
+                return {
+                    ok: false,
+                    error: "Wrong password",
+                }
+            }
+            return {
+                ok: true,
+                token: "test"
+            }
+        } catch (error) {
+            return {
+                ok: false,
+                error
+            }
         }
     }
 }
