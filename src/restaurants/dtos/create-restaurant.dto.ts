@@ -1,22 +1,8 @@
-import { ArgsType, Field } from '@nestjs/graphql';
-import { IsBoolean, IsString, Length } from 'class-validator';
+import { Field, InputType, OmitType } from '@nestjs/graphql';
+import { Restaurant } from '../entities/restaurant.entity';
 
-@ArgsType()
-export class CreateRestaurantDto {
-    @Field(type => String)
-    @IsString()
-    @Length(5, 10)
-    name: string;
-
-    @Field(type => Boolean)
-    @IsBoolean()
-    isVegan: boolean;
-
-    @Field(type => String)
-    @IsString()
-    address: string;
-
-    @Field(type => String)
-    @IsString()
-    ownersName: string;
-}
+@InputType()
+// Omitype의 두번째 파라미터는 Restaurant클래스의 데코레이터 속성을 변경해준다.
+// 원래는 ObjectType인데 OnitType은 InputType만 받을 수 있어서 바꿔줘야한다.
+// https://nomadcoders.co/nuber-eats/lectures/2001, https://docs.nestjs.com/graphql/mapped-types
+export class CreateRestaurantDto extends OmitType(Restaurant, ["id"]/*, InputType*/) {}
