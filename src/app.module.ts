@@ -3,8 +3,9 @@ import * as Joi from 'joi'; // 타입스크립트나 nest로 되어있지 않은
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RestaurantsModule } from './restaurants/restaurants.module';
-import { Restaurant } from './restaurants/entities/restaurant.entity';
+import { UsersModule } from './users/users.module';
+import { CommonModule } from './common/common.module';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -21,23 +22,24 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
         DB_NAME: Joi.string().required(),
       }),
     }),
-    RestaurantsModule,
     GraphQLModule.forRoot({
-    autoSchemaFile: true,
-  }),
-  TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: process.env.DB_HOST,
-    port: +process.env.DB_PORT,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    synchronize: process.env.NODE_ENV !== 'prod',
-    logging: true,
-    entities: [Restaurant],
-  }),
-],
+      autoSchemaFile: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      synchronize: process.env.NODE_ENV !== 'prod',
+      logging: true,
+      entities: [User],
+    }),
+    UsersModule,
+    CommonModule,
+  ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

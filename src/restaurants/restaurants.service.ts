@@ -7,7 +7,7 @@ import { Restaurant } from "./entities/restaurant.entity";
 
 @Injectable()
 export class RestaurantService {
-    constructor(@InjectRepository(Restaurant) private readonly restaurants: Repository<Restaurant>) {}
+    constructor(@InjectRepository(Restaurant) private readonly restaurants: Repository<Restaurant>) { }
 
     getAall(): Promise<Restaurant[]> {
         return this.restaurants.find();
@@ -18,7 +18,7 @@ export class RestaurantService {
         return this.restaurants.save(newRestaurant);
     }
 
-    updateRestaurant({id, data}: UpdateRestaurantDto) {
-        return this.restaurants.update(id, {...data})
+    updateRestaurant({ id, data }: UpdateRestaurantDto) {
+        return this.restaurants.update(id, { ...data })
     }
 }
