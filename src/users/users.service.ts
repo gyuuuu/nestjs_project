@@ -54,8 +54,8 @@ export class UsersService {
           error: 'User not found',
         };
       }
-      const passwordCorrect = await user.checkPassword(password);
-      if (!passwordCorrect) {
+      const isPasswordCorrect = await user.checkPassword(password);
+      if (!isPasswordCorrect) {
         return {
           ok: false,
           error: 'Wrong password',
