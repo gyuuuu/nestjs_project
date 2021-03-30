@@ -24,7 +24,7 @@ import { MailModule } from './mail/mail.module';
       ignoreEnvFile: process.env.NODE_ENV === 'prod', // prod 환경에서는 env 파일을 불러오지 않고 다른 방법으로 환경변수 주입
       validationSchema: Joi.object({
         // config의 유효성 검사
-        NODE_ENV: Joi.string().valid('dev', 'prod').required(),
+        NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.string().required(),
         DB_USERNAME: Joi.string().required(),
